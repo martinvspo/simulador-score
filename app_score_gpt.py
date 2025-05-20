@@ -159,13 +159,13 @@ if os.path.exists("historial_evaluaciones.csv"):
 else:
     st.info("Aún no hay evaluaciones registradas.")
 # --- Integración GPT ---
-import openai
+from openai import OpenAI
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def preguntar_a_gpt(pregunta):
     try:
-        respuesta = openai.ChatCompletion.create(
+        respuesta = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": pregunta}]
         )

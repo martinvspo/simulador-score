@@ -82,13 +82,16 @@ else:
 with st.form("formulario_credito"):
     if not cliente_data.empty:
         nombre = cliente_data.iloc[0]["nombre"]
-        ingreso_mensual = cliente_data.iloc[0]["ingreso_mensual"]
+        ingreso_mensual = st.number_input("Ingreso mensual (S/)", min_value=500, step=100, value=int(cliente_data.iloc[0]["ingreso_mensual"]))
         score_sbs = cliente_data.iloc[0]["score_sbs"]
         endeudamiento = cliente_data.iloc[0]["endeudamiento"]
         st.markdown(f"**Nombre:** {nombre}")
-        st.markdown(f"**Ingreso mensual:** S/{ingreso_mensual}")
         st.markdown(f"**Score SBS:** {score_sbs}")
         st.markdown(f"**Endeudamiento:** {endeudamiento}%")
+
+        # Actualizar ingreso en base de datos
+        df_clientes.loc[df_clientes["dni"] == int(dni), "ingreso_mensual"] = ingreso_mensual
+        df_clientes.to_csv("clientes.csv", index=False)
     else:
         nombre = st.text_input("Nombre completo")
         ingreso_mensual = st.number_input("Ingreso mensual (S/)", min_value=500, step=100)
@@ -158,4 +161,3 @@ if os.path.exists("historial_evaluaciones.csv"):
     st.dataframe(df_historial)
 else:
     st.info("Aún no hay evaluaciones registradas.")
-

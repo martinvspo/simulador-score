@@ -161,6 +161,7 @@ else:
 # --- Integración GPT ---
 from openai import OpenAI
 
+# Inicializa el cliente con tu clave desde los secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def preguntar_a_gpt(pregunta):

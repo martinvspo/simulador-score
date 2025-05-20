@@ -158,3 +158,26 @@ if os.path.exists("historial_evaluaciones.csv"):
     st.dataframe(df_historial)
 else:
     st.info("Aún no hay evaluaciones registradas.")
+# --- Integración GPT ---
+import openai
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+def preguntar_a_gpt(pregunta):
+    try:
+        respuesta = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": pregunta}]
+        )
+        return respuesta.choices[0].message.content.strip()
+    except Exception as e:
+        return f"⚠️ Error al consultar GPT: {e}"
+# --- Interfaz para hacer preguntas a GPT ---
+st.markdown("### 🤖 ¿Tienes dudas sobre tu evaluación?")
+pregunta = st.text_input("Hazle una pregunta al asesor GPT")
+
+if pregunta:
+    st.info("Consultando a GPT...")
+    respuesta = preguntar_a_gpt(pregunta)
+    st.success(f"Asistente GPT:\n\n{respuesta}")
+
